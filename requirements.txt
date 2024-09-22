@@ -1,0 +1,4 @@
+pyspark==3.2.0
+kafka-python
+py4j==0.10.9.2
+pandas
