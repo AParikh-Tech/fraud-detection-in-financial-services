@@ -1,29 +1,40 @@
-import json
 import random
+import json
 import time
+from datetime import datetime
 from kafka import KafkaProducer
 
-
-# Configure Kafka Producer
+# Initialize the Kafka producer
 producer = KafkaProducer(bootstrap_servers='localhost:9092',
-                        value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+                         value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
-locations = ['NY', 'CA', 'IL']
-merchants = ["fraud_Keeling-Crist", "fraud_Corwin-Collins", "fraud_Lockman Ltd", "fraud_Harris Inc"]
-categories = ["grocery_pos", "gas_transport", "food_dining", "shopping_pos", "misc_net"]
+# Possible locations, merchants, and categories (based on your sample)
+locations = [
+    {'state': 'NY', 'city_pop': 10000, 'lat': 40.7128, 'long': -74.0060},
+    {'state': 'CA', 'city_pop': 15000, 'lat': 34.0522, 'long': -118.2437},
+    {'state': 'IL', 'city_pop': 8000, 'lat': 41.8781, 'long': -87.6298}
+]
 
-while True:
+
+# Function to generate time_of_day feature
+def get_time_of_day():
+    current_time = datetime.now()
+    return current_time.hour + current_time.minute / 60.0
+
+for i in range(5):
+    # Select a random location (includes state, city_pop, lat, long)
+    location = random.choice(locations)
+
     # Generate a random transaction
     transaction = {
-        'amt': round(random.uniform(10, 500), 2),
-        'state': random.choice(locations),
-        'merchant': random.choice(merchants),
-        'category': random.choice(categories)
+        'amt': round(random.uniform(10, 500), 2),    # Transaction amount
+        'time_of_day': get_time_of_day(),            # Time of transaction in hours
+        'city_pop': location['city_pop'],            # Population of the city
+        'lat': location['lat'],                      # Latitude of the transaction
+        'long': location['long']                     # Longitude of the transaction
     }
 
-    # Send transaction to Kafka
+    # Send transaction to Kafka topic 'transactions'
     producer.send('transactions', value=transaction)
     print(f"Sent transaction: {transaction}")
-
-    # Adjust time interval as needed
     time.sleep(3)

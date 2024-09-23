@@ -2,7 +2,10 @@ import xgboost as xgb
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+import pandas as pd
+import json
 import sys
+
 
 # Load the pre-trained model
 bst = xgb.Booster()
@@ -14,31 +17,33 @@ spark = SparkSession.builder \
     .config("spark.executor.heartbeatInterval", "60s") \
     .getOrCreate()
 
-
 spark.sparkContext.setLogLevel("INFO")
-
-
-def encode_location(location):
-    # One-hot encoding for location (example for NY, LA, and CHI)
-    locations = ['NY', 'CA', 'IL']
-    return [1 if loc == location else 0 for loc in locations]
 
 
 def predict_fraud(transaction):
     # Extract features
-    amount = transaction['amount']
-    location_encoded = encode_location(transaction['location']) # One hot encoding
+    print(f"Transaction: {transaction}")
+    amount = transaction['amt']
     time_of_day = transaction['time_of_day']
-    merchant_category = transaction['merchant_category']
-    user_avg_transaction = transaction['user_avg_transaction']
+    city_pop = transaction['city_pop']
+    lat = transaction['lat']
+    long = transaction['long']
 
-    # Prepare features as a 2D array
-    features = [[amount] + location_encoded + [time_of_day, merchant_category, user_avg_transaction]]
+   # Prepare the full feature vector
+    features = [[
+        amount,
+        time_of_day,
+        city_pop,
+        lat,
+        long
+    ]]
+
+    print(features)
 
     # Make prediction
-    fradulent_score = bst.predict(xgb.DMatrix(features))[0]
+    fraudulent_score = bst.predict(xgb.DMatrix(features))[0]
 
-    return fradulent_score
+    return fraudulent_score
 
 
 # Process the JSON values
