@@ -38,7 +38,9 @@
 - bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
 
-### Train the model (This step is optional. The generated fraud_detection.model is already included)
+### Train the model
+- Download the dataset from here:- https://drive.google.com/file/d/1yNchbhVkYf-iJEAaLWAgWT_HLoX0LotI/view?usp=drive_link
+- python generate_train_test_data.py
 - python train_model.py
 
 ### Start Kafka consumer

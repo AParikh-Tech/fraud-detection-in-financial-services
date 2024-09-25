@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import json
 
 # Load the dataset
-data = pd.read_csv('fraudTrain.csv')
+data = pd.read_csv('training_data.csv')
 
 # Preprocess the data
 # Convert the transaction time to a numerical feature (you may want to use a better feature engineering method)
