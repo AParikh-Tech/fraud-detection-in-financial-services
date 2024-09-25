@@ -12,9 +12,6 @@ data = pd.read_csv('fraudTrain.csv')
 data['trans_date_trans_time'] = pd.to_datetime(data['trans_date_trans_time'])
 data['time_of_day'] = data['trans_date_trans_time'].dt.hour + data['trans_date_trans_time'].dt.minute / 60.0
 
-# One-hot encode categorical features
-data = pd.get_dummies(data, columns=['merchant', 'category', 'state'], drop_first=True)
-
 # Define the features and target variable
 features = [
     'amt',

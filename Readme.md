@@ -1,6 +1,6 @@
 ### Install Conda
 - curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
-- bash Miniconda3-latest-MacOSX-arm64
+- bash Miniconda3-latest-MacOSX-arm64.sh
 - conda init
 - conda --version
 
@@ -42,7 +42,14 @@
 - python train_model.py
 
 ### Start Kafka consumer
-- spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 consumer.py
+- spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 consumer.py | tee consumer.log
 
 ### Start Kafka Producer
 - python producer.py
+
+### Consumer Logs
+
+- tail -f consumer.log
+
+<img src="consumerLogs.png" alt="drawing" width="400"/>
+

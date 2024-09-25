@@ -3,6 +3,7 @@ from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 import pandas as pd
+import numpy as np
 import json
 import sys
 
@@ -29,8 +30,8 @@ def predict_fraud(transaction):
     lat = transaction['lat']
     long = transaction['long']
 
-   # Prepare the full feature vector
-    features = [[
+    # Prepare the full feature vector
+    feature_values = [[
         amount,
         time_of_day,
         city_pop,
@@ -38,10 +39,12 @@ def predict_fraud(transaction):
         long
     ]]
 
-    print(features)
+    input_data = np.array(feature_values)
+    columns = ['amt', 'time_of_day', 'city_pop', 'lat', 'long']
+    input_df = pd.DataFrame(input_data, columns=columns)
 
     # Make prediction
-    fraudulent_score = bst.predict(xgb.DMatrix(features))[0]
+    fraudulent_score = bst.predict(xgb.DMatrix(input_df))[0]
 
     return fraudulent_score
 
@@ -55,8 +58,12 @@ def process_batch(batch_df, batch_id):
         transaction = json.loads(row.json_value)
         fradulent_score = predict_fraud(transaction)
 
+        # print(f"Fradulent Score: {fradulent_score}")
+
         if fradulent_score > 0.8:
             print(f"Alert: Potential fraud detected for transaction: {transaction}")
+        else:
+            print(f"Legit Transaction: {transaction}")
 
 # Read from Kafka
 kafka_stream = spark.readStream \

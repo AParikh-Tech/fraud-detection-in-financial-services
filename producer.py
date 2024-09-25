@@ -21,13 +21,13 @@ def get_time_of_day():
     current_time = datetime.now()
     return current_time.hour + current_time.minute / 60.0
 
-for i in range(5):
+while True:
     # Select a random location (includes state, city_pop, lat, long)
     location = random.choice(locations)
 
     # Generate a random transaction
     transaction = {
-        'amt': round(random.uniform(10, 500), 2),    # Transaction amount
+        'amt': round(random.uniform(50, 200), 2),    # Transaction amount
         'time_of_day': get_time_of_day(),            # Time of transaction in hours
         'city_pop': location['city_pop'],            # Population of the city
         'lat': location['lat'],                      # Latitude of the transaction
@@ -37,4 +37,4 @@ for i in range(5):
     # Send transaction to Kafka topic 'transactions'
     producer.send('transactions', value=transaction)
     print(f"Sent transaction: {transaction}")
-    time.sleep(3)
+    time.sleep(1)
