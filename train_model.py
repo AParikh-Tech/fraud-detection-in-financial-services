@@ -4,13 +4,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 import json
 
-# Load the dataset
-data = pd.read_csv('training_data.csv')
+# Load the dfset
+df = pd.read_csv('train_data.csv')
 
-# Preprocess the data
-# Convert the transaction time to a numerical feature (you may want to use a better feature engineering method)
-data['trans_date_trans_time'] = pd.to_datetime(data['trans_date_trans_time'])
-data['time_of_day'] = data['trans_date_trans_time'].dt.hour + data['trans_date_trans_time'].dt.minute / 60.0
+# Drop unneccary columns
+df = df.drop(['cc_num'], axis=1)
+
+# Preprocess the df
+# Convert the transaction time to a numerical feature 
+df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
+df['time_of_day'] = df['trans_date_trans_time'].dt.hour + df['trans_date_trans_time'].dt.minute / 60.0
 
 # Define the features and target variable
 features = [
@@ -18,15 +21,20 @@ features = [
     'time_of_day',
     'city_pop',
     'lat',
-    'long'  # You may choose to add more features as needed
+    'long',
+    'merchant',
+    'category',
+    'state'
 ]
 
-target = 'is_fraud'
+X_train = df[features]
+y_train = df['is_fraud']
 
-X_train = data[features]
-y_train = data[target]
+# One-hot encode categorical features
+X_train = pd.get_dummies(X_train, columns=['merchant', 'category', 'state'], drop_first=True)
 
-# Create an XGBoost DMatrix for the training data
+print(X_train)
+# Create an XGBoost DMatrix for the training df
 dtrain = xgb.DMatrix(X_train, label=y_train)
 
 # Define the parameters for the XGBoost model

@@ -49,9 +49,15 @@
 ### Start Kafka Producer
 - python producer.py
 
-### Consumer Logs
+<img src="screenshots/sentTransactions.png" alt="drawing" width="400"/>
 
-- tail -f consumer.log
+### Alerts
 
-<img src="consumerLogs.png" alt="drawing" width="400"/>
+- cat consumer.log | head -n 20
+
+<img src="screenshots/legitTransactions.png" alt="drawing" width="400"/>
+
+- cat consumer.log | grep "Alert"
+
+<img src="screenshots/fradulentTransactions.png" alt="drawing" width="400"/>
 
