@@ -51,7 +51,9 @@
 
 <img src="screenshots/sentTransactions.png" alt="drawing" width="400"/>
 
-### Alerts
+### Model in Action
+
+The pre-trained machine learning model will trigger alerts as fradulent on higher amounts as can be seen in the provided screenshots below:-
 
 - cat consumer.log | head -n 20
 
@@ -61,3 +63,7 @@
 
 <img src="screenshots/fradulentTransactions.png" alt="drawing" width="400"/>
 
+P.S. To anyone who would like to know from where Apache Kafka got it's name, here's the wikipedia link: https://en.wikipedia.org/wiki/Apache_Kafka
+     that goes into it's origination, history and architectural concepts as well. Apparently, the creator's named the software after the well-renowned
+     author Franz Kafka. I do intend to go through his famous works such as the <em>The Metamorphosis</em>, <em>The Trial</em> and <em>The Castle</em>
+     as mentioned here https://en.wikipedia.org/wiki/Franz_Kafka and would probably carve out some time for future reading.
